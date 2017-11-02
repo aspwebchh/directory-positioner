@@ -1,7 +1,6 @@
 C:\dev\fast_open_work_dir\fast_open_work_dir\bin\Debug\fast_open_work_dir.exe.config
 C:\dev\fast_open_work_dir\fast_open_work_dir\bin\Debug\fast_open_work_dir.exe
 C:\dev\fast_open_work_dir\fast_open_work_dir\bin\Debug\fast_open_work_dir.pdb
-C:\dev\fast_open_work_dir\fast_open_work_dir\obj\Debug\fast_open_work_dir.csprojResolveAssemblyReference.cache
 C:\dev\fast_open_work_dir\fast_open_work_dir\obj\Debug\MainWindow.g.cs
 C:\dev\fast_open_work_dir\fast_open_work_dir\obj\Debug\App.g.cs
 C:\dev\fast_open_work_dir\fast_open_work_dir\obj\Debug\fast_open_work_dir_MarkupCompile.cache
