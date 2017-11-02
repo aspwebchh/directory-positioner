@@ -4,6 +4,10 @@
              xmlns:local="clr-namespace:fast_open_work_dir"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <Style x:Key="ButtonNormal" TargetType="{x:Type Button}">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="8,4,8,4"/>
+            <Setter Property="Margin" Value="10,10,10,10"/>
+        </Style>
     </Application.Resources>
 </Application>

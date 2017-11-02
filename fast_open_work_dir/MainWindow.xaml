@@ -5,8 +5,28 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:fast_open_work_dir"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="目录打开快捷工具" Height="350" Width="525" WindowStartupLocation="CenterScreen">
+
+
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <WrapPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">
+            <Button Margin="0,0,10,0">
+                <TextBlock>配置</TextBlock>
+            </Button>
+        </WrapPanel>
+
+
+        <WrapPanel Grid.Row="1" Grid.Column="0" Name="ButtonList">
+           
+        </WrapPanel>
     </Grid>
 </Window>
