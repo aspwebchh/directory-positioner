@@ -7,10 +7,16 @@
         mc:Ignorable="d"
         Title="目录打开快捷工具" Height="350" Width="525" WindowStartupLocation="CenterScreen">
 
-
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary  Source="style.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"></RowDefinition>
+            <RowDefinition Height="10"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
 
@@ -18,14 +24,14 @@
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <WrapPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">
+        <WrapPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="Hidden">
             <Button Margin="0,0,10,0">
                 <TextBlock>配置</TextBlock>
             </Button>
         </WrapPanel>
 
 
-        <WrapPanel Grid.Row="1" Grid.Column="0" Name="ButtonList">
+        <WrapPanel Grid.Row="1" Grid.Column="0" Name="ButtonList" Margin="15,0,15,0">
            
         </WrapPanel>
     </Grid>

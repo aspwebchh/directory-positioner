@@ -26,7 +26,7 @@ namespace fast_open_work_dir
         {
             InitializeComponent();
             InitButtons();
-            
+
         }
 
         private void InitButtons()
@@ -40,12 +40,22 @@ namespace fast_open_work_dir
                 var text = new TextBlock();
                 text.Text = name;
                 button.Content = text;
-                button.Style = (Style)this.FindResource("ButtonNormal");
-                button.Click += (s, e) =>  {
+                button.Style = Resources["ButtonNormal"] as Style;
+                button.Click += (s, e) =>
+                {
                     System.Diagnostics.Process.Start(path);
                 };
                 ButtonList.Children.Add(button);
             });
         }
+
+        public void ForceShow()
+        {
+            this.Show();
+            this.WindowState = WindowState.Normal;
+            this.Visibility = System.Windows.Visibility.Visible;
+            this.Activate();
+        }
+
     }
 }
