@@ -15,7 +15,7 @@ namespace fast_open_work_dir
         public static void Main(string[] args)
         {
             SingleInstanceManager manager = new SingleInstanceManager();
-            manager.Run(args);
+            manager.Run(args);  
         }
     }
 
