@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Diagnostics;
 using System.Data;
+using System.Windows.Automation;
 
 namespace fast_open_work_dir
 {
@@ -27,6 +28,17 @@ namespace fast_open_work_dir
             InitializeComponent();
             InitButtons();
 
+            AutomationElement aelement =  AutomationElement.RootElement
+                      .FindFirst( TreeScope.Descendants, new PropertyCondition( AutomationElement.ClassNameProperty, "Shell_TrayWnd" ) )
+                      .FindFirst( TreeScope.Descendants, new PropertyCondition( AutomationElement.ClassNameProperty, "ReBarWindow32" ) )
+                      .FindFirst( TreeScope.Descendants, new PropertyCondition( AutomationElement.ClassNameProperty, "MSTaskSwWClass" ) )
+                      .FindFirst( TreeScope.Descendants, new PropertyCondition( AutomationElement.ClassNameProperty, "MSTaskListWClass" ) )
+                      .FindFirst( TreeScope.Descendants, new PropertyCondition( AutomationElement.NameProperty, "目录打开快捷工具" ) );
+            if( aelement != null ) {
+                System.Windows.Rect rect = (System.Windows.Rect) aelement.GetCurrentPropertyValue( AutomationElement.BoundingRectangleProperty );
+                this.Left = rect.Left;
+                this.Top = rect.Top - this.Height;
+            }
         }
 
         private void InitButtons()

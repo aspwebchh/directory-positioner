@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:fast_open_work_dir"
         mc:Ignorable="d"
-        Title="目录打开快捷工具" Height="350" Width="525" WindowStartupLocation="CenterScreen">
+        Title="目录打开快捷工具" Height="350" Width="525" WindowStartupLocation="Manual">
 
     <Window.Resources>
         <ResourceDictionary>
