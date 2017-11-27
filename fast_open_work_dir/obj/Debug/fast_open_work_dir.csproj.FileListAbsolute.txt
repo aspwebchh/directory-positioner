@@ -12,4 +12,5 @@ C:\dev\fast_open_work_dir\fast_open_work_dir\obj\Debug\fast_open_work_dir.csproj
 C:\dev\fast_open_work_dir\fast_open_work_dir\obj\Debug\fast_open_work_dir.csproj.CoreCompileInputs.cache
 C:\dev\fast_open_work_dir\fast_open_work_dir\obj\Debug\fast_open_work_dir.exe
 C:\dev\fast_open_work_dir\fast_open_work_dir\obj\Debug\fast_open_work_dir.pdb
-C:\dev\fast_open_work_dir\fast_open_work_dir\obj\Debug\App.baml
+C:\dev\fast_open_work_dir\fast_open_work_dir\obj\Debug\style.baml
+C:\dev\fast_open_work_dir\fast_open_work_dir\obj\Debug\fast_open_work_dir.csprojResolveAssemblyReference.cache

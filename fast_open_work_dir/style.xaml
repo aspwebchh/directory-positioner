@@ -2,12 +2,26 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:fast_open_work_dir">
 
-    
-        <Style x:Key="ButtonNormal" TargetType="{x:Type Button}">
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Padding" Value="8,4,8,4"/>
-            <Setter Property="Margin" Value="10,10,10,10"/>
-        </Style>
 
+    <Style x:Key="ButtonNormal" TargetType="{x:Type Button}">
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Padding" Value="8,4,8,4"/>
+        <Setter Property="Margin" Value="10,10,10,10"/>
+    </Style>
+
+
+    <Style TargetType="Button" x:Key="CloseBtn">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Name="border" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
 
 </ResourceDictionary>

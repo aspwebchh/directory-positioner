@@ -18,6 +18,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="10"></RowDefinition>
             <RowDefinition></RowDefinition>
+            <RowDefinition Height="20"></RowDefinition>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -32,7 +33,15 @@
 
 
         <WrapPanel Grid.Row="1" Grid.Column="0" Name="ButtonList" Margin="15,0,15,0">
-           
+
+        </WrapPanel>
+
+        <WrapPanel  Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">
+        <Border Width="50" Height="20"  MouseEnter="WrapPanel_MouseEnter" MouseLeave="WrapPanel_MouseLeave"  Background="White">
+            <Button  Name="Close" Background="White" Visibility="Collapsed" BorderThickness="0" Style="{StaticResource CloseBtn}" HorizontalAlignment="Right" Margin="0,0,5,0" Click="Close_Click">
+                <TextBlock Text="退出"></TextBlock>
+            </Button>
+        </Border>
         </WrapPanel>
     </Grid>
 </Window>
