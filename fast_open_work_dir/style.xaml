@@ -6,15 +6,7 @@
     <Style x:Key="ButtonNormal" TargetType="{x:Type Button}">
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Margin" Value="10,10,10,10"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Border Name="border"  SnapsToDevicePixels="True" Padding="8,4,8,4" Background="#dddddd" BorderBrush="#707070" BorderThickness="1">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="Padding" Value="8,4,8,4"/>
     </Style>
 
 
