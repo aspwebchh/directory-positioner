@@ -14,6 +14,8 @@ using System.Windows.Shapes;
 using System.Diagnostics;
 using System.Data;
 using System.Windows.Automation;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace fast_open_work_dir {
     /// <summary>
@@ -21,27 +23,24 @@ namespace fast_open_work_dir {
     /// </summary>
     public partial class MainWindow : Window {
         public MainWindow() {
-
             ResizeMode = System.Windows.ResizeMode.NoResize;
 
             InitializeComponent();
             InitButtons();
 
 
-                var root = AutomationElement.RootElement;
-                AutomationElement aelement = AutomationElement.RootElement
-                          .FindFirst( TreeScope.Descendants, new PropertyCondition( AutomationElement.ClassNameProperty, "Shell_TrayWnd" ) )
-                          .FindFirst( TreeScope.Descendants, new PropertyCondition( AutomationElement.ClassNameProperty, "ReBarWindow32" ) )
-                          //.FindFirst( TreeScope.Descendants, new PropertyCondition( AutomationElement.ClassNameProperty, "MSTaskSwWClass" ) )
-                          .FindFirst( TreeScope.Descendants, new PropertyCondition( AutomationElement.ClassNameProperty, "MSTaskListWClass" ) )
-                          .FindFirst( TreeScope.Descendants, new PropertyCondition( AutomationElement.NameProperty, "目录打开快捷工具" ) );
-                if( aelement != null ) {
-                    System.Windows.Rect rect = (System.Windows.Rect)aelement.GetCurrentPropertyValue( AutomationElement.BoundingRectangleProperty );
-                    this.Left = rect.Left;
-                    this.Top = rect.Top - this.Height;
-                }
-
-
+            var root = AutomationElement.RootElement;
+            AutomationElement aelement = AutomationElement.RootElement
+                        .FindFirst( TreeScope.Descendants, new PropertyCondition( AutomationElement.ClassNameProperty, "Shell_TrayWnd" ) )
+                        .FindFirst( TreeScope.Descendants, new PropertyCondition( AutomationElement.ClassNameProperty, "ReBarWindow32" ) )
+                        //.FindFirst( TreeScope.Descendants, new PropertyCondition( AutomationElement.ClassNameProperty, "MSTaskSwWClass" ) )
+                        .FindFirst( TreeScope.Descendants, new PropertyCondition( AutomationElement.ClassNameProperty, "MSTaskListWClass" ) )
+                        .FindFirst( TreeScope.Descendants, new PropertyCondition( AutomationElement.NameProperty, "目录打开快捷工具" ) );
+            if( aelement != null ) {
+                System.Windows.Rect rect = (System.Windows.Rect)aelement.GetCurrentPropertyValue( AutomationElement.BoundingRectangleProperty );
+                this.Left = rect.Left;
+                this.Top = rect.Top - this.Height;
+            }
         }
 
         public void InitButtons() {
@@ -85,9 +84,9 @@ namespace fast_open_work_dir {
 
         public void ForceShow() {
             this.Show();
-            this.WindowState = WindowState.Normal;
-            this.Visibility = System.Windows.Visibility.Visible;
-            this.Activate();
+            //this.WindowState = WindowState.Normal;
+            //this.Visibility = System.Windows.Visibility.Visible;
+            //this.Activate();
         }
 
         protected override void OnClosing( System.ComponentModel.CancelEventArgs e ) {
