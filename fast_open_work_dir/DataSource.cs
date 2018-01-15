@@ -84,5 +84,29 @@ namespace fast_open_work_dir
             xmlDoc.Save(SRC_FILE_NAME);
             return true;
         }
+
+        public static bool SetBgColor( string path, string color ) {
+            var xmlDoc = new XmlDocument();
+            xmlDoc.Load( SRC_FILE_NAME );
+            var ele = GetElementByPath( xmlDoc, path );
+            if( ele == null ) {
+                return false;
+            }
+            ele.SetAttribute( "BgColor", color );
+            xmlDoc.Save( SRC_FILE_NAME );
+            return true;
+        }
+
+        public static bool SetTextColor( string path, string color ) {
+            var xmlDoc = new XmlDocument();
+            xmlDoc.Load( SRC_FILE_NAME );
+            var ele = GetElementByPath( xmlDoc, path );
+            if( ele == null ) {
+                return false;
+            }
+            ele.SetAttribute( "TextColor", color );
+            xmlDoc.Save( SRC_FILE_NAME );
+            return true;
+        }
     }
 }

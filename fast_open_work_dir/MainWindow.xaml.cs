@@ -16,6 +16,7 @@ using System.Data;
 using System.Windows.Automation;
 using System.IO;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace fast_open_work_dir {
     /// <summary>
@@ -43,15 +44,51 @@ namespace fast_open_work_dir {
             }
         }
 
+        private SolidColorBrush Color2SCB( string color ) {
+            System.Drawing.SolidBrush sb = new System.Drawing.SolidBrush( ColorTranslator.FromHtml( color ) );
+            SolidColorBrush solidColorBrush = new SolidColorBrush( System.Windows.Media.Color.FromArgb( sb.Color.A, sb.Color.R, sb.Color.G, sb.Color.B ) );
+            return solidColorBrush;
+        }
+
         public void InitButtons() {
             var dataTable = DataSource.GetPathList();
             ButtonList.Children.Clear();
             dataTable.Rows.Cast<DataRow>().ToList().ForEach( item => {
                 var name = item[ "Name" ].ToString();
                 var path = item[ "Path_Text" ].ToString();
+                var bgColor = "";
+                var txtColor = "";
+                if( dataTable.Columns.Contains( "BgColor" ) ) {
+                    bgColor = item[ "BgColor" ].ToString();
+                }
+                if( dataTable.Columns.Contains( "TextColor" ) ) {
+                    txtColor = item[ "TextColor" ].ToString();
+                }
+
                 var button = new Button();
 
+                button.MouseEnter += delegate ( object sender, MouseEventArgs e ) {
+                    if( string.IsNullOrEmpty( bgColor ) ) {
+                        button.Background = Color2SCB( "#FFBEE6FD" );
+                    }
+                };
+                button.MouseLeave += delegate ( object sender, MouseEventArgs e ) {
+                    if( string.IsNullOrEmpty( bgColor ) ) {
+                        button.Background = Color2SCB( "#FFDDDDDD" );
+                    }
+                };
+
+                if( !string.IsNullOrEmpty( bgColor ) ) {
+                    button.Background = Color2SCB( bgColor );
+                    button.BorderThickness = new Thickness( 0 );
+                }
+
+                if( !string.IsNullOrEmpty( txtColor ) ) {
+                    button.Foreground = Color2SCB( txtColor );
+                }
+
                 var contextMenu = new ContextMenu();
+                //删除
                 var menuItem = new MenuItem();
                 menuItem.Header = "删除";
                 menuItem.Click += delegate ( object sender, RoutedEventArgs e ) {
@@ -63,6 +100,39 @@ namespace fast_open_work_dir {
                     }
                 };
                 contextMenu.Items.Add( menuItem );
+
+                //设置按钮背景颜色
+                var bgColorMenuItem = new MenuItem();
+                bgColorMenuItem.Header = "背景颜色";
+                bgColorMenuItem.Click += delegate ( object sender, RoutedEventArgs e ){
+                    System.Windows.Forms.ColorDialog colorDialog = new System.Windows.Forms.ColorDialog();
+                    if( colorDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK ) {
+                        var success = DataSource.SetBgColor( path, ColorTranslator.ToHtml( colorDialog.Color ) );
+                        if( !success ) {
+                            MessageBox.Show( "设置背景颜色失败" );
+                        } else {
+                            InitButtons();
+                        }
+                    }
+                };
+                contextMenu.Items.Add( bgColorMenuItem );
+
+                //设置按钮文本颜色
+                var txtColorMenuItem = new MenuItem();
+                txtColorMenuItem.Header = "文本颜色";
+                txtColorMenuItem.Click += delegate ( object sender, RoutedEventArgs e ) {
+                    System.Windows.Forms.ColorDialog colorDialog = new System.Windows.Forms.ColorDialog();
+                    if( colorDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK ) {
+                        var success = DataSource.SetTextColor( path, ColorTranslator.ToHtml( colorDialog.Color ) );
+                        if( !success ) {
+                            MessageBox.Show( "设置文本颜色失败" );
+                        } else {
+                            InitButtons();
+                        }
+                    }
+                };
+                contextMenu.Items.Add( txtColorMenuItem );
+
                 button.ContextMenu = contextMenu;
 
                 var text = new TextBlock();
@@ -84,9 +154,6 @@ namespace fast_open_work_dir {
 
         public void ForceShow() {
             this.Show();
-            //this.WindowState = WindowState.Normal;
-            //this.Visibility = System.Windows.Visibility.Visible;
-            //this.Activate();
         }
 
         protected override void OnClosing( System.ComponentModel.CancelEventArgs e ) {
