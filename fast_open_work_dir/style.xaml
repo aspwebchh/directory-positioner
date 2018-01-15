@@ -24,10 +24,10 @@
                             <Setter Property="BorderBrush" TargetName="border" Value="#FF3C7FB1"/>
                         </Trigger>
                         -->
-                        <Trigger Property="IsPressed" Value="True">
+                        <!--<Trigger Property="IsPressed" Value="True">
                             <Setter Property="Background" TargetName="border" Value="#FFC4E5F6"/>
                             <Setter Property="BorderBrush" TargetName="border" Value="#FF2C628B"/>
-                        </Trigger>
+                        </Trigger>-->
                         <Trigger Property="ToggleButton.IsChecked" Value="True">
                             <Setter Property="Background" TargetName="border" Value="#FFBCDDEE"/>
                             <Setter Property="BorderBrush" TargetName="border" Value="#FF245A83"/>
