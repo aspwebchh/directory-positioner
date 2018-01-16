@@ -15,7 +15,6 @@ using System.Diagnostics;
 using System.Data;
 using System.Windows.Automation;
 using System.IO;
-using System.Threading.Tasks;
 using System.Drawing;
 
 namespace fast_open_work_dir {
@@ -66,6 +65,7 @@ namespace fast_open_work_dir {
                 }
 
                 var button = new Button();
+               // button.Background = Color2SCB( "#FFDDDDDD" );
 
                 button.MouseEnter += delegate ( object sender, MouseEventArgs e ) {
                     if( string.IsNullOrEmpty( bgColor ) ) {
