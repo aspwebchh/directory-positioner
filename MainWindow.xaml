@@ -1,11 +1,11 @@
-﻿<Window x:Class="fast_open_work_dir.MainWindow"
+﻿<Window x:Class="DirectoryPositioner.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:fast_open_work_dir"
+        xmlns:local="clr-namespace:DirectoryPositioner"
         mc:Ignorable="d"
-        Title="目录打开快捷工具" Height="350" Width="525" WindowStartupLocation="Manual">
+        Title="目录打开快捷工具"  WindowStartupLocation="Manual">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -25,25 +25,37 @@
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <WrapPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="Hidden">
-            <Button Margin="0,0,10,0">
-                <TextBlock>配置</TextBlock>
-            </Button>
-        </WrapPanel>
+        <ListBox Name="DataList"  Grid.Row="1" Grid.Column="0" Visibility="Collapsed" MouseDoubleClick="DataList_MouseDoubleClick">
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="编辑" Click="MenuItem_Click_Edit"></MenuItem>
+                    <MenuItem Header="删除" Click="MenuItem_Click_Del"></MenuItem>
+                </ContextMenu>
+            </ListBox.ContextMenu>
+        </ListBox>
 
+        <ScrollViewer Grid.Row="1" Grid.Column="0" Visibility="Collapsed"  Name="ButtonList">
+            <WrapPanel Margin="15,0,15,0" >
 
-        <WrapPanel Grid.Row="1" Grid.Column="0" Name="ButtonList" Margin="15,0,15,0">
-
-        </WrapPanel>
+            </WrapPanel>
+        </ScrollViewer>
 
         <WrapPanel  Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">
-        <Border Width="60" Height="20"  MouseEnter="WrapPanel_MouseEnter" MouseLeave="WrapPanel_MouseLeave"  Background="White">
+        <Border Width="120" Height="20"  MouseEnter="WrapPanel_MouseEnter" MouseLeave="WrapPanel_MouseLeave"  Background="White">
                 <WrapPanel>
-                    <Button  Name="Add" Background="White" Visibility="Collapsed" BorderThickness="0" Style="{StaticResource CloseBtn}" HorizontalAlignment="Right" Margin="0,0,5,0" Click="Add_Click">
+                    <Button  Name="Btn" Background="White" Visibility="Collapsed" BorderThickness="0" Style="{StaticResource CloseBtn}" HorizontalAlignment="Right" Margin="0,2,5,0" Click="Btn_Click">
+                        <TextBlock Text="按钮"></TextBlock>
+                    </Button>
+
+                    <Button  Name="List" Background="White" Visibility="Collapsed" BorderThickness="0" Style="{StaticResource CloseBtn}" HorizontalAlignment="Right" Margin="0,2,5,0" Click="List_Click">
+                        <TextBlock Text="列表"></TextBlock>
+                    </Button>
+
+                    <Button  Name="Add" Background="White" Visibility="Collapsed" BorderThickness="0" Style="{StaticResource CloseBtn}" HorizontalAlignment="Right" Margin="0,2,5,0" Click="Add_Click">
                         <TextBlock Text="添加"></TextBlock>
                     </Button>
 
-                    <Button  Name="Close" Background="White" Visibility="Collapsed" BorderThickness="0" Style="{StaticResource CloseBtn}" HorizontalAlignment="Right" Margin="0,0,5,0" Click="Close_Click">
+                    <Button  Name="Close" Background="White" Visibility="Collapsed" BorderThickness="0" Style="{StaticResource CloseBtn}" HorizontalAlignment="Right" Margin="0,2,5,0" Click="Close_Click">
                         <TextBlock Text="退出"></TextBlock>
                     </Button>
                 </WrapPanel>

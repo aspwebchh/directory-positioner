@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -17,17 +18,32 @@ using System.Windows.Automation;
 using System.IO;
 using System.Drawing;
 
-namespace fast_open_work_dir {
+namespace DirectoryPositioner {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
     public partial class MainWindow : Window {
         public MainWindow() {
             ResizeMode = System.Windows.ResizeMode.NoResize;
-
             InitializeComponent();
-            InitButtons();
+            InitPage();
+        }
 
+        private void InitPage() {
+            DataList.Visibility = Visibility.Collapsed;
+            ButtonList.Visibility = Visibility.Collapsed;
+            var pageMode = DataSource.GetPageMode();
+            if( pageMode == PageMode.Btn ) {
+                this.Width = 525;
+                this.Height = 350;
+                ButtonList.Visibility = Visibility.Visible;
+                InitButtons();
+            } else {
+                this.Width = 300;
+                this.Height = 300;
+                DataList.Visibility = Visibility.Visible;
+                InitLists();
+            }
 
             var root = AutomationElement.RootElement;
             AutomationElement aelement = AutomationElement.RootElement
@@ -36,11 +52,19 @@ namespace fast_open_work_dir {
                         //.FindFirst( TreeScope.Descendants, new PropertyCondition( AutomationElement.ClassNameProperty, "MSTaskSwWClass" ) )
                         .FindFirst( TreeScope.Descendants, new PropertyCondition( AutomationElement.ClassNameProperty, "MSTaskListWClass" ) )
                         .FindFirst( TreeScope.Descendants, new PropertyCondition( AutomationElement.NameProperty, "目录打开快捷工具" ) );
+            ;
             if( aelement != null ) {
                 System.Windows.Rect rect = (System.Windows.Rect)aelement.GetCurrentPropertyValue( AutomationElement.BoundingRectangleProperty );
                 this.Left = rect.Left;
                 this.Top = rect.Top - this.Height;
             }
+        }
+
+
+        private void InitLists() {
+            var data = DataSource.GetDataList();
+            DataList.ItemsSource = data;
+            DataList.DisplayMemberPath = "Name";
         }
 
         private SolidColorBrush Color2SCB( string color ) {
@@ -50,8 +74,9 @@ namespace fast_open_work_dir {
         }
 
         public void InitButtons() {
+            var btnList = ( ButtonList.Content as WrapPanel );
             var dataTable = DataSource.GetPathList();
-            ButtonList.Children.Clear();
+            btnList.Children.Clear();
             dataTable.Rows.Cast<DataRow>().ToList().ForEach( item => {
                 var name = item[ "Name" ].ToString();
                 var path = item[ "Path_Text" ].ToString();
@@ -93,6 +118,9 @@ namespace fast_open_work_dir {
                 editMenuItem.Header = "编辑";
                 editMenuItem.Click += delegate ( object sender, RoutedEventArgs e ) {
                     var window = new Edit( name, path );
+                    window.EditCompleted += delegate {
+                        InitPage();
+                    };
                     window.Owner = this;
                     window.ShowDialog();
                 };
@@ -106,7 +134,7 @@ namespace fast_open_work_dir {
                 menuItem.Click += delegate ( object sender, RoutedEventArgs e ) {
                     var success = DataSource.Delete( path );
                     if( success ) {
-                        InitButtons();
+                        InitPage();
                     } else {
                         MessageBox.Show( "删除失败" );
                     }
@@ -153,14 +181,18 @@ namespace fast_open_work_dir {
                 button.Content = text;
                 button.Style = Resources[ "ButtonNormal" ] as Style;
                 button.Click += ( s, e ) => {
-                    try {
-                        System.Diagnostics.Process.Start( path );
-                    } catch( Exception ex ) {
-                        MessageBox.Show( ex.Message );
-                    }
+                    OpenPath( path );
                 };
-                ButtonList.Children.Add( button );
+                btnList.Children.Add( button );
             } );
+        }
+
+        private void OpenPath( string path ) {
+            try {
+                System.Diagnostics.Process.Start( path );
+            } catch( Exception ex ) {
+                MessageBox.Show( ex.Message );
+            }
         }
 
 
@@ -177,11 +209,15 @@ namespace fast_open_work_dir {
         private void WrapPanel_MouseEnter( object sender, MouseEventArgs e ) {
             Close.Visibility = Visibility.Visible;
             Add.Visibility = Visibility.Visible;
+            List.Visibility = Visibility.Visible;
+            Btn.Visibility = Visibility.Visible;
         }
 
         private void WrapPanel_MouseLeave( object sender, MouseEventArgs e ) {
             Close.Visibility = Visibility.Collapsed;
             Add.Visibility = Visibility.Collapsed;
+            List.Visibility = Visibility.Collapsed;
+            Btn.Visibility = Visibility.Collapsed;
         }
 
         private void Close_Click( object sender, RoutedEventArgs e ) {
@@ -191,7 +227,50 @@ namespace fast_open_work_dir {
         private void Add_Click( object sender, RoutedEventArgs e ) {
             var ediWid = new Edit();
             ediWid.Owner = this;
+            ediWid.EditCompleted += delegate {
+                InitPage();
+            };
             ediWid.ShowDialog();
+        }
+
+        #region   
+        //列表模式
+        private void MenuItem_Click_Edit( object sender, RoutedEventArgs e ) {
+            var selectItem = DataList.SelectedItem as ConfigItem;
+            var window = new Edit( selectItem.Name, selectItem.Path );
+            window.EditCompleted += delegate {
+                InitPage();
+            };
+            window.Owner = this;
+            window.ShowDialog();
+        }
+
+        private void MenuItem_Click_Del( object sender, RoutedEventArgs e ) {
+            var selectItem = DataList.SelectedItem as ConfigItem;
+            var success = DataSource.Delete( selectItem.Path );
+            if( success ) {
+                InitPage();
+            } else {
+                MessageBox.Show( "删除失败" );
+            }
+        }
+        #endregion
+
+
+
+        private void Btn_Click( object sender, RoutedEventArgs e ) {
+            DataSource.SetPageMode( PageMode.Btn );
+            InitPage();
+        }
+
+        private void List_Click( object sender, RoutedEventArgs e ) {
+            DataSource.SetPageMode( PageMode.List );
+            InitPage();
+        }
+
+        private void DataList_MouseDoubleClick( object sender, MouseButtonEventArgs e ) {
+            var selectItem = DataList.SelectedItem as ConfigItem;
+            OpenPath( selectItem.Path );
         }
     }
 }

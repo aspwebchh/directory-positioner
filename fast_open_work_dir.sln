@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fast_open_work_dir", "fast_open_work_dir.csproj", "{BA9C7B72-DC76-48CA-9A7F-7ADFAF229BEB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryPositioner", "DirectoryPositioner.csproj", "{BA9C7B72-DC76-48CA-9A7F-7ADFAF229BEB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -11,13 +11,15 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace fast_open_work_dir {
+namespace DirectoryPositioner {
     /// <summary>
     /// Edit.xaml 的交互逻辑
     /// </summary>
     public partial class Edit : Window {
         private bool isEdit = false;
         private string oldPath = string.Empty;
+
+        public event Action EditCompleted;
 
         public Edit() {
             InitializeComponent();
@@ -47,7 +49,9 @@ namespace fast_open_work_dir {
             var success = isEdit ? DataSource.EditPath(oldPath, path,name) : DataSource.AddPath( path, name );
             if( success ) {
                 var owner = this.Owner as MainWindow;
-                owner.InitButtons();
+                if( EditCompleted != null ) {
+                    EditCompleted();
+                }
                 this.Close();
             } else {
                 MessageBox.Show("添加失败，请重试" );

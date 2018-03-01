@@ -6,8 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Windows;
 
-namespace fast_open_work_dir
-{
+namespace DirectoryPositioner {
     public class EntryPoint
     {
         [STAThread]
