@@ -17,6 +17,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="10"></RowDefinition>
+            <RowDefinition Height="22"></RowDefinition>
             <RowDefinition></RowDefinition>
             <RowDefinition Height="20"></RowDefinition>
         </Grid.RowDefinitions>
@@ -25,7 +26,9 @@
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <ListBox Name="DataList"  Grid.Row="1" Grid.Column="0" Visibility="Collapsed" MouseDoubleClick="DataList_MouseDoubleClick">
+        <TextBox  Grid.Row="1" Grid.Column="0" Name="SearchText" KeyUp="SearchText_KeyUp" Padding="2"></TextBox>
+
+        <ListBox Name="DataList"  BorderThickness="1,0,1,1" Grid.Row="2" Grid.Column="0" Visibility="Collapsed" MouseDoubleClick="DataList_MouseDoubleClick">
             <ListBox.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="编辑" Click="MenuItem_Click_Edit"></MenuItem>
@@ -34,13 +37,13 @@
             </ListBox.ContextMenu>
         </ListBox>
 
-        <ScrollViewer Grid.Row="1" Grid.Column="0" Visibility="Collapsed"  Name="ButtonList">
+        <ScrollViewer Grid.Row="2" Grid.Column="0" Visibility="Collapsed"  Name="ButtonList">
             <WrapPanel Margin="15,0,15,0" >
 
             </WrapPanel>
         </ScrollViewer>
 
-        <WrapPanel  Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">
+        <WrapPanel  Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">
         <Border Width="120" Height="20"  MouseEnter="WrapPanel_MouseEnter" MouseLeave="WrapPanel_MouseLeave"  Background="White">
                 <WrapPanel>
                     <Button  Name="Btn" Background="White" Visibility="Collapsed" BorderThickness="0" Style="{StaticResource CloseBtn}" HorizontalAlignment="Right" Margin="0,2,5,0" Click="Btn_Click">

@@ -100,6 +100,16 @@ namespace DirectoryPositioner {
             return result.ToList();
         }
 
+        public static List<ConfigItem> GetDataList( string pattern ) {
+            return GetDataList().Where( item => {
+                var initials = Helper.GetInitials( item.Name );
+                var pinYin = Helper.GetPinYin( item.Name );
+                return initials.ToLower().IndexOf( pattern.ToLower() ) != -1 ||
+                 pinYin.ToLower().IndexOf( pattern.ToLower() ) != -1 ||
+                 item.Name.IndexOf( pattern ) != -1;
+            } ).ToList();
+        }
+
         public static bool Delete( string path ) {
             var xmlDoc = new XmlDocument();
             xmlDoc.Load( SRC_FILE_NAME );

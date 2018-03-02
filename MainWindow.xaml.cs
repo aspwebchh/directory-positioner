@@ -17,6 +17,9 @@ using System.Data;
 using System.Windows.Automation;
 using System.IO;
 using System.Drawing;
+using Pinyin4net;
+using Pinyin4net.Format;
+using System.Windows.Threading;
 
 namespace DirectoryPositioner {
     /// <summary>
@@ -27,9 +30,51 @@ namespace DirectoryPositioner {
             ResizeMode = System.Windows.ResizeMode.NoResize;
             InitializeComponent();
             InitPage();
+
+            this.Activated += delegate {
+                Keyboard.Focus( SearchText );
+            };
+
+            var jumpListView = false;
+
+            this.KeyUp += delegate ( object sender, KeyEventArgs e ) {
+                var pageMode = DataSource.GetPageMode();
+                if( pageMode == PageMode.Btn ) {
+                    return;
+                }
+                if( e.Key == Key.Down ) {
+                    if( SearchText.IsFocused ) {
+                        DataList.SelectedIndex = 0;
+                        DataList.Focus();
+                    }
+                }
+                if( e.Key == Key.Up && DataList.SelectedIndex == 0 ) {
+                    if( jumpListView ) {
+                        SearchText.Focus();
+                        jumpListView = false;
+                    }
+                    if( !jumpListView ) {
+                        jumpListView = true;
+                    }
+                } else {
+                    jumpListView = false;
+                }
+                if( e.Key == Key.Enter ) {
+                    var selectItem = DataList.SelectedItem as ConfigItem;
+                    if( selectItem != null ) {
+                        OpenPath( selectItem.Path );
+                    }
+                }
+                if( e.Key == Key.Left ) {
+                    SearchText.Focus();
+                }
+            };
         }
 
         private void InitPage() {
+            SearchText.Text = "";
+            Keyboard.Focus( SearchText );
+
             DataList.Visibility = Visibility.Collapsed;
             ButtonList.Visibility = Visibility.Collapsed;
             var pageMode = DataSource.GetPageMode();
@@ -73,27 +118,17 @@ namespace DirectoryPositioner {
             return solidColorBrush;
         }
 
-        public void InitButtons() {
+        private void InitButtons( List<ConfigItem> dataList ) {
             var btnList = ( ButtonList.Content as WrapPanel );
-            var dataTable = DataSource.GetPathList();
-            if( dataTable == null ) {
-                return;
-            }
             btnList.Children.Clear();
-            dataTable.Rows.Cast<DataRow>().ToList().ForEach( item => {
-                var name = item[ "Name" ].ToString();
-                var path = item[ "Path_Text" ].ToString();
-                var bgColor = "";
-                var txtColor = "";
-                if( dataTable.Columns.Contains( "BgColor" ) ) {
-                    bgColor = item[ "BgColor" ].ToString();
-                }
-                if( dataTable.Columns.Contains( "TextColor" ) ) {
-                    txtColor = item[ "TextColor" ].ToString();
-                }
+            dataList.ForEach( item => {
+                var name = item.Name;
+                var path = item.Path;
+                var bgColor = item.BgColor;
+                var txtColor = item.TextColor;
 
                 var button = new Button();
-               // button.Background = Color2SCB( "#FFDDDDDD" );
+                // button.Background = Color2SCB( "#FFDDDDDD" );
 
                 button.MouseEnter += delegate ( object sender, MouseEventArgs e ) {
                     if( string.IsNullOrEmpty( bgColor ) ) {
@@ -147,7 +182,7 @@ namespace DirectoryPositioner {
                 //设置按钮背景颜色
                 var bgColorMenuItem = new MenuItem();
                 bgColorMenuItem.Header = "背景颜色";
-                bgColorMenuItem.Click += delegate ( object sender, RoutedEventArgs e ){
+                bgColorMenuItem.Click += delegate ( object sender, RoutedEventArgs e ) {
                     System.Windows.Forms.ColorDialog colorDialog = new System.Windows.Forms.ColorDialog();
                     if( colorDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK ) {
                         var success = DataSource.SetBgColor( path, ColorTranslator.ToHtml( colorDialog.Color ) );
@@ -188,6 +223,11 @@ namespace DirectoryPositioner {
                 };
                 btnList.Children.Add( button );
             } );
+        }
+
+        private void InitButtons() {
+            var dataList = DataSource.GetDataList();
+            InitButtons( dataList );
         }
 
         private void OpenPath( string path ) {
@@ -274,6 +314,17 @@ namespace DirectoryPositioner {
         private void DataList_MouseDoubleClick( object sender, MouseButtonEventArgs e ) {
             var selectItem = DataList.SelectedItem as ConfigItem;
             OpenPath( selectItem.Path );
+        }
+
+        private void SearchText_KeyUp( object sender, KeyEventArgs e ) {
+            var text = SearchText.Text.Trim();
+            var dataList = DataSource.GetDataList( text );
+            var pageMode = DataSource.GetPageMode();
+            if( pageMode == PageMode.List ) {
+                DataList.ItemsSource = dataList;
+            } else if( pageMode == PageMode.Btn ) {
+                InitButtons( dataList );
+            }
         }
     }
 }
