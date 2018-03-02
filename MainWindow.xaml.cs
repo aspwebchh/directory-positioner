@@ -76,6 +76,9 @@ namespace DirectoryPositioner {
         public void InitButtons() {
             var btnList = ( ButtonList.Content as WrapPanel );
             var dataTable = DataSource.GetPathList();
+            if( dataTable == null ) {
+                return;
+            }
             btnList.Children.Clear();
             dataTable.Rows.Cast<DataRow>().ToList().ForEach( item => {
                 var name = item[ "Name" ].ToString();

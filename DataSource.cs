@@ -90,6 +90,7 @@ namespace DirectoryPositioner {
 
             var xDoc = XDocument.Load( SRC_FILE_NAME );
             var result = from ele in xDoc.Descendants( "Path" )
+                         orderby getValue( ele.Attribute( "Name" ) ) ascending
                          select new ConfigItem {
                              Name = getValue( ele.Attribute( "Name" ) ),
                              BgColor = getValue( ele.Attribute( "BgColor" ) ),
