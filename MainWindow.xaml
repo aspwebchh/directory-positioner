@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DirectoryPositioner"
         mc:Ignorable="d"
-        Title="目录打开快捷工具"  WindowStartupLocation="Manual">
+        Title="DirectoryPositioner"  WindowStartupLocation="Manual">
 
     <Window.Resources>
         <ResourceDictionary>
