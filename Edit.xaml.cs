@@ -34,6 +34,15 @@ namespace DirectoryPositioner {
             Path.Text = path;
         }
 
+        public Edit( string path ) {
+            InitializeComponent();
+
+            oldPath = path;
+            Path.Text = path;
+
+            Name.Focus();
+        }
+
         private void Button_Click( object sender, RoutedEventArgs e ) {
             var name = Name.Text.Trim();
             var path = Path.Text.Trim();

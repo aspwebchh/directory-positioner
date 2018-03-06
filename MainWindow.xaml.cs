@@ -69,6 +69,18 @@ namespace DirectoryPositioner {
                     SearchText.Focus();
                 }
             };
+
+            this.Drop += delegate ( object sender, DragEventArgs e ) {
+                if( e.Data.GetDataPresent( DataFormats.FileDrop ) ) {
+                    var path = ( (System.Array)e.Data.GetData( DataFormats.FileDrop ) ).GetValue( 0 ).ToString();
+                    var window = new Edit( path );
+                    window.EditCompleted += delegate {
+                        InitPage();
+                    };
+                    window.Owner = this;
+                    window.ShowDialog();
+                }
+            };
         }
 
         private void InitPage() {
