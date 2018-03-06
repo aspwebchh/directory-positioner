@@ -122,6 +122,7 @@ namespace DirectoryPositioner {
             var data = DataSource.GetDataList();
             DataList.ItemsSource = data;
             DataList.DisplayMemberPath = "Name";
+            SetDataCount( data.Count );
         }
 
         private SolidColorBrush Color2SCB( string color ) {
@@ -240,6 +241,7 @@ namespace DirectoryPositioner {
         private void InitButtons() {
             var dataList = DataSource.GetDataList();
             InitButtons( dataList );
+            SetDataCount( dataList.Count );
         }
 
         private void OpenPath( string path ) {
@@ -337,6 +339,11 @@ namespace DirectoryPositioner {
             } else if( pageMode == PageMode.Btn ) {
                 InitButtons( dataList );
             }
+            SetDataCount( dataList.Count );
+        }
+
+        private void SetDataCount( int count ) {
+            Count.Text = count + "个对象";
         }
     }
 }

@@ -39,30 +39,45 @@
 
         <ScrollViewer Grid.Row="2" Grid.Column="0" Visibility="Collapsed"  Name="ButtonList">
             <WrapPanel Margin="15,0,15,0" >
-
+                
             </WrapPanel>
         </ScrollViewer>
 
-        <WrapPanel  Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center">
-        <Border Width="120" Height="20"  MouseEnter="WrapPanel_MouseEnter" MouseLeave="WrapPanel_MouseLeave"  Background="White">
-                <WrapPanel>
-                    <Button  Name="Btn" Background="White" Visibility="Collapsed" BorderThickness="0" Style="{StaticResource CloseBtn}" HorizontalAlignment="Right" Margin="0,2,5,0" Click="Btn_Click">
-                        <TextBlock Text="按钮"></TextBlock>
-                    </Button>
+            <Grid Grid.Row="3" Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"></RowDefinition>
+                </Grid.RowDefinitions>
 
-                    <Button  Name="List" Background="White" Visibility="Collapsed" BorderThickness="0" Style="{StaticResource CloseBtn}" HorizontalAlignment="Right" Margin="0,2,5,0" Click="List_Click">
-                        <TextBlock Text="列表"></TextBlock>
-                    </Button>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="120"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
 
-                    <Button  Name="Add" Background="White" Visibility="Collapsed" BorderThickness="0" Style="{StaticResource CloseBtn}" HorizontalAlignment="Right" Margin="0,2,5,0" Click="Add_Click">
-                        <TextBlock Text="添加"></TextBlock>
-                    </Button>
-
-                    <Button  Name="Close" Background="White" Visibility="Collapsed" BorderThickness="0" Style="{StaticResource CloseBtn}" HorizontalAlignment="Right" Margin="0,2,5,0" Click="Close_Click">
-                        <TextBlock Text="退出"></TextBlock>
-                    </Button>
+                <WrapPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left">
+                    <TextBlock Name="Count" Padding="5,2,0,0" FontSize="12"></TextBlock>
                 </WrapPanel>
-            </Border>
-        </WrapPanel>
+
+                <Border Grid.Row="0" Grid.Column="1" Width="120" Height="20" MouseEnter="WrapPanel_MouseEnter" MouseLeave="WrapPanel_MouseLeave"  Background="White">
+                    <WrapPanel>
+                        <Button Name="Btn" Background="White" Visibility="Collapsed" BorderThickness="0" Style="{StaticResource CloseBtn}" HorizontalAlignment="Right" Margin="0,2,5,0" Click="Btn_Click">
+                            <TextBlock Text="按钮"></TextBlock>
+                        </Button>
+
+                        <Button  Name="List" Background="White" Visibility="Collapsed" BorderThickness="0" Style="{StaticResource CloseBtn}" HorizontalAlignment="Right" Margin="0,2,5,0" Click="List_Click">
+                            <TextBlock Text="列表"></TextBlock>
+                        </Button>
+
+                        <Button  Name="Add" Background="White" Visibility="Collapsed" BorderThickness="0" Style="{StaticResource CloseBtn}" HorizontalAlignment="Right" Margin="0,2,5,0" Click="Add_Click">
+                            <TextBlock Text="添加"></TextBlock>
+                        </Button>
+
+                        <Button  Name="Close" Background="White" Visibility="Collapsed" BorderThickness="0" Style="{StaticResource CloseBtn}" HorizontalAlignment="Right" Margin="0,2,5,0" Click="Close_Click">
+                            <TextBlock Text="退出"></TextBlock>
+                        </Button>
+                    </WrapPanel>
+                </Border>
+                
+            </Grid>
+
     </Grid>
 </Window>
