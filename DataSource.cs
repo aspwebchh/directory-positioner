@@ -95,7 +95,8 @@ namespace DirectoryPositioner {
                              Name = getValue( ele.Attribute( "Name" ) ),
                              BgColor = getValue( ele.Attribute( "BgColor" ) ),
                              TextColor = getValue( ele.Attribute( "TextColor" ) ),
-                             Path = getValue( ele.FirstNode as XText )
+                             Path = getValue( ele.FirstNode as XText ),
+                             Type = Helper.JudgePathType( getValue( ele.FirstNode as XText ) )
                          };
             return result.ToList();
         }

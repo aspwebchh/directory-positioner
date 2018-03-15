@@ -27,7 +27,7 @@ namespace DirectoryPositioner {
     /// </summary>
     public partial class MainWindow : Window {
         public MainWindow() {
-            ResizeMode = System.Windows.ResizeMode.NoResize;
+            ResizeMode = ResizeMode.NoResize;
             InitializeComponent();
             InitPage();
 
@@ -121,7 +121,7 @@ namespace DirectoryPositioner {
         private void InitLists() {
             var data = DataSource.GetDataList();
             DataList.ItemsSource = data;
-            DataList.DisplayMemberPath = "Name";
+            //DataList.DisplayMemberPath = "Name";
             SetDataCount( data.Count );
         }
 

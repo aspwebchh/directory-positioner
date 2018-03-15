@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using Pinyin4net;
 using Pinyin4net.Format;
+using System.Text.RegularExpressions;
+using System.IO;
 
 namespace DirectoryPositioner {
     class Helper {
@@ -40,6 +42,18 @@ namespace DirectoryPositioner {
             };
             var result = chineseString.ToCharArray().Select( getPinYin ).ToArray();
             return string.Join( "", result );
-        } 
+        }
+
+        public static string JudgePathType(string path) {
+            if( Regex.IsMatch( path, @"^http(s)?://", RegexOptions.IgnoreCase ) ) {
+                return "链接";
+            } else if( Directory.Exists(path) ) {
+                return "目录";
+            } else if( File.Exists(path) ) {
+                return "文件";
+            } else {
+                return "未知";
+            }
+        }
     }
 }
