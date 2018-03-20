@@ -14,7 +14,7 @@ namespace DirectoryPositioner {
             CreateSourceFile();
         }
 
-        const String SRC_FILE_NAME = "data.xml";
+        public const String SRC_FILE_NAME = "data.xml";
 
         public static bool CreateSourceFile() {
             if( !File.Exists( SRC_FILE_NAME ) ) {
@@ -29,7 +29,6 @@ namespace DirectoryPositioner {
             }
             return false;
         }
-
 
         private static XmlElement GetElementByPath( XmlDocument doc, string path ) {
             var eles = doc.GetElementsByTagName( "Path" );
