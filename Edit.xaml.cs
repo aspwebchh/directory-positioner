@@ -63,7 +63,7 @@ namespace DirectoryPositioner {
                 }
                 this.Close();
             } else {
-                MessageBox.Show("添加失败，请重试" );
+                MessageBox.Show( "添加失败，请重试" );
             }
         }
     }

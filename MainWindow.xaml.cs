@@ -121,7 +121,6 @@ namespace DirectoryPositioner {
         private void InitLists() {
             var data = DataSource.GetDataList();
             DataList.ItemsSource = data;
-            //DataList.DisplayMemberPath = "Name";
             SetDataCount( data.Count );
         }
 
@@ -247,8 +246,8 @@ namespace DirectoryPositioner {
         private void OpenPath( string path ) {
             try {
                 System.Diagnostics.Process.Start( path );
-            } catch( Exception ex ) {
-                MessageBox.Show( ex.Message );
+            } catch( Exception e ) {
+                MessageBox.Show( e.Message );
             }
         }
 
@@ -268,6 +267,7 @@ namespace DirectoryPositioner {
             Add.Visibility = Visibility.Visible;
             List.Visibility = Visibility.Visible;
             Btn.Visibility = Visibility.Visible;
+            Config.Visibility = Visibility.Visible;
         }
 
         private void WrapPanel_MouseLeave( object sender, MouseEventArgs e ) {
@@ -275,6 +275,7 @@ namespace DirectoryPositioner {
             Add.Visibility = Visibility.Collapsed;
             List.Visibility = Visibility.Collapsed;
             Btn.Visibility = Visibility.Collapsed;
+            Config.Visibility = Visibility.Collapsed;
         }
 
         private void Close_Click( object sender, RoutedEventArgs e ) {
@@ -344,6 +345,23 @@ namespace DirectoryPositioner {
 
         private void SetDataCount( int count ) {
             Count.Text = count + "个对象";
+        }
+
+        private void Config_Click( object sender, RoutedEventArgs e ) {
+            var apps = new List<string> { "notepad++", "notepad" };
+
+            foreach( var app in apps ) {
+                try {
+                    System.Diagnostics.Process.Start( app, DataSource.SRC_FILE_NAME );
+                    return;
+                } catch( Exception ) { }
+            }
+
+            try {
+                System.Diagnostics.Process.Start( DataSource.SRC_FILE_NAME );
+            } catch( Exception ex ) {
+                MessageBox.Show( ex.Message );
+            }
         }
     }
 }
