@@ -244,15 +244,6 @@ namespace DirectoryPositioner {
         }
 
         private void OpenPath( string path ) {
-            var apps = new List<string> { "notepad++", "notepad" };
-
-            foreach( var app in apps ) {
-                try {
-                    System.Diagnostics.Process.Start( app, path );
-                    return;
-                } catch( Exception) { }
-            }
-
             try {
                 System.Diagnostics.Process.Start( path );
             } catch( Exception e ) {
