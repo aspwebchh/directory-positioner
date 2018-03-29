@@ -69,6 +69,10 @@ namespace DirectoryPositioner {
                 if( e.Key == Key.Left ) {
                     SearchText.Focus();
                 }
+
+                if( e.Key == Key.Escape ) {
+                    WindowState = WindowState.Minimized;
+                }
             };
 
             this.Drop += delegate ( object sender, DragEventArgs e ) {
