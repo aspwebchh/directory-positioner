@@ -251,6 +251,7 @@ namespace DirectoryPositioner {
         private void OpenPath( string path ) {
             try {
                 System.Diagnostics.Process.Start( path );
+                WindowState = WindowState.Minimized;
             } catch( Exception e ) {
                 MessageBox.Show( e.Message );
             }
