@@ -79,10 +79,6 @@ namespace DirectoryPositioner {
                 if( e.Key == Key.Left ) {
                     SearchText.Focus();
                 }
-
-                if( e.Key == Key.Escape ) {
-                    WindowState = WindowState.Minimized;
-                }
             };
 
             this.Drop += delegate ( object sender, DragEventArgs e ) {
@@ -96,6 +92,8 @@ namespace DirectoryPositioner {
                     window.ShowDialog();
                 }
             };
+
+            SearchText.Focus();
         }
 
         private void InitPage() {
@@ -168,6 +166,7 @@ namespace DirectoryPositioner {
             var pos = PointsAndSizes.WindowHidden;
             this.Left = pos.X;
             this.Top = pos.Y;
+            this.Hide();
         }
 
         private void ShowWindowOnLeftBottom() {
@@ -175,6 +174,8 @@ namespace DirectoryPositioner {
             this.Left = windowPos.X;
             this.Top = windowPos.Y;
 
+            this.WindowState = WindowState.Normal;
+            this.Show();
             this.Activate();
         }
 
