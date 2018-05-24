@@ -20,14 +20,24 @@ using System.Drawing;
 using Pinyin4net;
 using Pinyin4net.Format;
 using System.Windows.Threading;
+using System.Threading;
+
 
 namespace DirectoryPositioner {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
     public partial class MainWindow : Window {
+        public bool EnableMouseRangeCheck {
+            get; set;
+        }
+
         public MainWindow() {
+            EnableMouseRangeCheck = false;
+
             this.Topmost = true;
+            this.ShowInTaskbar = false;
+
             ResizeMode = ResizeMode.NoResize;
             InitializeComponent();
             InitPage();
@@ -78,7 +88,7 @@ namespace DirectoryPositioner {
             this.Drop += delegate ( object sender, DragEventArgs e ) {
                 if( e.Data.GetDataPresent( DataFormats.FileDrop ) ) {
                     var path = ( (System.Array)e.Data.GetData( DataFormats.FileDrop ) ).GetValue( 0 ).ToString();
-                    var window = new Edit( path );
+                    var window = new Edit( path, this );
                     window.EditCompleted += delegate {
                         InitPage();
                     };
@@ -95,33 +105,77 @@ namespace DirectoryPositioner {
             DataList.Visibility = Visibility.Collapsed;
             ButtonList.Visibility = Visibility.Collapsed;
             var pageMode = DataSource.GetPageMode();
-            if( pageMode == PageMode.Btn ) {
-                this.Width = 525;
-                this.Height = 350;
-                ButtonList.Visibility = Visibility.Visible;
-                InitButtons();
-            } else {
-                this.Width = 300;
-                this.Height = 300;
-                DataList.Visibility = Visibility.Visible;
-                InitLists();
-            }
 
-            var root = AutomationElement.RootElement;
-            AutomationElement aelement = AutomationElement.RootElement
-                        .FindFirst( TreeScope.Descendants, new PropertyCondition( AutomationElement.ClassNameProperty, "Shell_TrayWnd" ) )
-                        .FindFirst( TreeScope.Descendants, new PropertyCondition( AutomationElement.ClassNameProperty, "ReBarWindow32" ) )
-                        //.FindFirst( TreeScope.Descendants, new PropertyCondition( AutomationElement.ClassNameProperty, "MSTaskSwWClass" ) )
-                        .FindFirst( TreeScope.Descendants, new PropertyCondition( AutomationElement.ClassNameProperty, "MSTaskListWClass" ) )
-                        .FindFirst( TreeScope.Descendants, new PropertyCondition( AutomationElement.NameProperty, "DirectoryPositioner" ) );
-            ;
-            if( aelement != null ) {
-                System.Windows.Rect rect = (System.Windows.Rect)aelement.GetCurrentPropertyValue( AutomationElement.BoundingRectangleProperty );
-                this.Left = rect.Left;
-                this.Top = rect.Top - this.Height;
-            }
+            this.Width = PointsAndSizes.ListModeWindowSize.Width;
+            this.Height = PointsAndSizes.ListModeWindowSize.Width;
+            DataList.Visibility = Visibility.Visible;
+            InitLists();
+
+            ShowWindowOnLeftBottom();
+
+
+            this.MouseEnter += delegate {
+                EnableMouseRangeCheck = true;
+            };
+
+            //如果鼠标移除窗口则隐藏
+            ThreadPool.QueueUserWorkItem( delegate {
+                var timer = new System.Timers.Timer();
+                timer.Enabled = true;
+                timer.Interval = 100;
+                timer.Start();
+                timer.Elapsed += delegate {
+                    if( !EnableMouseRangeCheck ) {
+                        return;
+                    }
+                    this.Dispatcher.Invoke( (Action)delegate {
+                        var mousePos = System.Windows.Forms.Control.MousePosition;
+                        var rect = PointsAndSizes.GetRectByWindow( this );
+                        if( !PointsAndSizes.In( rect, mousePos ) ) {
+                            this.HiddenWindow();
+                            EnableMouseRangeCheck = false;
+                        }
+                    } );
+                };
+            } );
+
+            //触发显示窗口操作
+            ThreadPool.QueueUserWorkItem( delegate {
+                var timer = new System.Timers.Timer();
+                timer.Enabled = true;
+                timer.Interval = 100;
+                timer.Start();
+                timer.Elapsed += delegate {
+                    var mousePos = System.Windows.Forms.Control.MousePosition;
+                    if( mousePos.X <= 1 && mousePos.Y >= SystemParameters.PrimaryScreenHeight - PointsAndSizes.ListModeWindowSize.Height ) {
+                        this.Dispatcher.Invoke( (Action)delegate {
+                            ShowWindowOnLeftBottom();
+                        } );
+                    }
+
+                    if( Math.Abs( mousePos.Y - SystemParameters.PrimaryScreenHeight ) <= 1 && mousePos.X <= PointsAndSizes.ListModeWindowSize.Width ) {
+                        this.Dispatcher.Invoke( (Action)delegate {
+                            ShowWindowOnLeftBottom();
+                        } );
+                    }
+                };
+
+            } );
         }
 
+
+        private void HiddenWindow() {
+            var pos = PointsAndSizes.WindowHidden;
+            this.Left = pos.X;
+            this.Top = pos.Y;
+        }
+
+        private void ShowWindowOnLeftBottom() {
+            var windowPos = PointsAndSizes.WindowOnLeftBottom;
+            this.Left = windowPos.X;
+            this.Top = windowPos.Y;
+            this.Show();
+        }
 
         private void InitLists() {
             var data = DataSource.GetDataList();
@@ -135,119 +189,6 @@ namespace DirectoryPositioner {
             return solidColorBrush;
         }
 
-        private void InitButtons( List<ConfigItem> dataList ) {
-            var btnList = ( ButtonList.Content as WrapPanel );
-            btnList.Children.Clear();
-            dataList.ForEach( item => {
-                var name = item.Name;
-                var path = item.Path;
-                var bgColor = item.BgColor;
-                var txtColor = item.TextColor;
-
-                var button = new Button();
-                // button.Background = Color2SCB( "#FFDDDDDD" );
-
-                button.MouseEnter += delegate ( object sender, MouseEventArgs e ) {
-                    if( string.IsNullOrEmpty( bgColor ) ) {
-                        button.Background = Color2SCB( "#FFBEE6FD" );
-                    }
-                };
-                button.MouseLeave += delegate ( object sender, MouseEventArgs e ) {
-                    if( string.IsNullOrEmpty( bgColor ) ) {
-                        button.Background = Color2SCB( "#FFDDDDDD" );
-                    }
-                };
-
-                if( !string.IsNullOrEmpty( bgColor ) ) {
-                    button.Background = Color2SCB( bgColor );
-                    button.BorderThickness = new Thickness( 0 );
-                }
-
-                if( !string.IsNullOrEmpty( txtColor ) ) {
-                    button.Foreground = Color2SCB( txtColor );
-                }
-
-                var contextMenu = new ContextMenu();
-                //编辑
-                var editMenuItem = new MenuItem();
-                editMenuItem.Header = "编辑";
-                editMenuItem.Click += delegate ( object sender, RoutedEventArgs e ) {
-                    var window = new Edit( name, path );
-                    window.EditCompleted += delegate {
-                        InitPage();
-                    };
-                    window.Owner = this;
-                    window.ShowDialog();
-                };
-                contextMenu.Items.Add( editMenuItem );
-
-
-
-                //删除
-                var menuItem = new MenuItem();
-                menuItem.Header = "删除";
-                menuItem.Click += delegate ( object sender, RoutedEventArgs e ) {
-                    var success = DataSource.Delete( path );
-                    if( success ) {
-                        InitPage();
-                    } else {
-                        MessageBox.Show( "删除失败" );
-                    }
-                };
-                contextMenu.Items.Add( menuItem );
-
-                //设置按钮背景颜色
-                var bgColorMenuItem = new MenuItem();
-                bgColorMenuItem.Header = "背景颜色";
-                bgColorMenuItem.Click += delegate ( object sender, RoutedEventArgs e ) {
-                    System.Windows.Forms.ColorDialog colorDialog = new System.Windows.Forms.ColorDialog();
-                    if( colorDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK ) {
-                        var success = DataSource.SetBgColor( path, ColorTranslator.ToHtml( colorDialog.Color ) );
-                        if( !success ) {
-                            MessageBox.Show( "设置背景颜色失败" );
-                        } else {
-                            InitButtons();
-                        }
-                    }
-                };
-                contextMenu.Items.Add( bgColorMenuItem );
-
-                //设置按钮文本颜色
-                var txtColorMenuItem = new MenuItem();
-                txtColorMenuItem.Header = "文本颜色";
-                txtColorMenuItem.Click += delegate ( object sender, RoutedEventArgs e ) {
-                    System.Windows.Forms.ColorDialog colorDialog = new System.Windows.Forms.ColorDialog();
-                    if( colorDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK ) {
-                        var success = DataSource.SetTextColor( path, ColorTranslator.ToHtml( colorDialog.Color ) );
-                        if( !success ) {
-                            MessageBox.Show( "设置文本颜色失败" );
-                        } else {
-                            InitButtons();
-                        }
-                    }
-                };
-                contextMenu.Items.Add( txtColorMenuItem );
-
-
-                button.ContextMenu = contextMenu;
-
-                var text = new TextBlock();
-                text.Text = name;
-                button.Content = text;
-                button.Style = Resources[ "ButtonNormal" ] as Style;
-                button.Click += ( s, e ) => {
-                    OpenPath( path );
-                };
-                btnList.Children.Add( button );
-            } );
-        }
-
-        private void InitButtons() {
-            var dataList = DataSource.GetDataList();
-            InitButtons( dataList );
-            SetDataCount( dataList.Count );
-        }
-
         private void OpenPath( string path ) {
             try {
                 System.Diagnostics.Process.Start( path );
@@ -255,8 +196,6 @@ namespace DirectoryPositioner {
                 MessageBox.Show( e.Message );
             }
         }
-
-
 
         public void ForceShow() {
             this.Show();
@@ -270,16 +209,12 @@ namespace DirectoryPositioner {
         private void WrapPanel_MouseEnter( object sender, MouseEventArgs e ) {
             Close.Visibility = Visibility.Visible;
             Add.Visibility = Visibility.Visible;
-            List.Visibility = Visibility.Visible;
-            Btn.Visibility = Visibility.Visible;
             Config.Visibility = Visibility.Visible;
         }
 
         private void WrapPanel_MouseLeave( object sender, MouseEventArgs e ) {
             Close.Visibility = Visibility.Collapsed;
             Add.Visibility = Visibility.Collapsed;
-            List.Visibility = Visibility.Collapsed;
-            Btn.Visibility = Visibility.Collapsed;
             Config.Visibility = Visibility.Collapsed;
         }
 
@@ -288,7 +223,7 @@ namespace DirectoryPositioner {
         }
 
         private void Add_Click( object sender, RoutedEventArgs e ) {
-            var ediWid = new Edit();
+            var ediWid = new Edit(this);
             ediWid.Owner = this;
             ediWid.EditCompleted += delegate {
                 InitPage();
@@ -300,7 +235,7 @@ namespace DirectoryPositioner {
         //列表模式
         private void MenuItem_Click_Edit( object sender, RoutedEventArgs e ) {
             var selectItem = DataList.SelectedItem as ConfigItem;
-            var window = new Edit( selectItem.Name, selectItem.Path );
+            var window = new Edit( selectItem.Name, selectItem.Path, this );
             window.EditCompleted += delegate {
                 InitPage();
             };
@@ -318,8 +253,6 @@ namespace DirectoryPositioner {
             }
         }
         #endregion
-
-
 
         private void Btn_Click( object sender, RoutedEventArgs e ) {
             DataSource.SetPageMode( PageMode.Btn );
@@ -340,11 +273,7 @@ namespace DirectoryPositioner {
             var text = SearchText.Text.Trim();
             var dataList = DataSource.GetDataList( text );
             var pageMode = DataSource.GetPageMode();
-            if( pageMode == PageMode.List ) {
-                DataList.ItemsSource = dataList;
-            } else if( pageMode == PageMode.Btn ) {
-                InitButtons( dataList );
-            }
+            DataList.ItemsSource = dataList;
             SetDataCount( dataList.Count );
         }
 
@@ -353,6 +282,8 @@ namespace DirectoryPositioner {
         }
 
         private void Config_Click( object sender, RoutedEventArgs e ) {
+            EnableMouseRangeCheck = false;
+
             var apps = new List<string> { "notepad++", "notepad" };
 
             foreach( var app in apps ) {

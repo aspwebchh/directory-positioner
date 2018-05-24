@@ -18,15 +18,22 @@ namespace DirectoryPositioner {
     public partial class Edit : Window {
         private bool isEdit = false;
         private string oldPath = string.Empty;
+        private MainWindow owner;
 
         public event Action EditCompleted;
 
-        public Edit() {
+        public Edit( MainWindow owner ) {
             InitializeComponent();
+
+            this.owner = owner;
+            owner.EnableMouseRangeCheck = false;
         }
 
-        public Edit( string name, string path ) {
+        public Edit( string name, string path, MainWindow owner ) {
             InitializeComponent();
+
+            this.owner = owner;
+            owner.EnableMouseRangeCheck = false;
 
             this.isEdit = true;
             oldPath = path;
@@ -34,8 +41,11 @@ namespace DirectoryPositioner {
             Path.Text = path;
         }
 
-        public Edit( string path ) {
+        public Edit( string path, MainWindow owner ) {
             InitializeComponent();
+
+            this.owner = owner;
+            owner.EnableMouseRangeCheck = false;
 
             oldPath = path;
             Path.Text = path;

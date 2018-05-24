@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DirectoryPositioner"
         mc:Ignorable="d"
-        Title="DirectoryPositioner" AllowDrop="True"  WindowStartupLocation="Manual">
+        Title="DirectoryPositioner" AllowDrop="True" >
 
     <Window.Resources>
         <ResourceDictionary>
@@ -23,12 +23,14 @@
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="33*"></ColumnDefinition>
+            <ColumnDefinition Width="16*"/>
+            <ColumnDefinition Width="103*"/>
         </Grid.ColumnDefinitions>
 
-        <TextBox  Grid.Row="1" Grid.Column="0" Name="SearchText" KeyUp="SearchText_KeyUp" Padding="2"></TextBox>
+        <TextBox  Grid.Row="1" Grid.Column="0" Name="SearchText" KeyUp="SearchText_KeyUp" Padding="2" Grid.ColumnSpan="3"></TextBox>
 
-        <ListView Name="DataList"  BorderThickness="1,0,1,1" Grid.Row="2" Grid.Column="0" Visibility="Collapsed" MouseDoubleClick="DataList_MouseDoubleClick" >
+        <ListView Name="DataList"  BorderThickness="1,0,1,1" Grid.Row="2" Grid.Column="0" Visibility="Collapsed" MouseDoubleClick="DataList_MouseDoubleClick" Grid.ColumnSpan="3" >
             <ListView.Resources>
                 <Style TargetType="GridViewColumnHeader">
                     <Setter Property="Visibility" Value="Collapsed" />
@@ -164,38 +166,30 @@
             </ListView.View>
         </ListView>
 
-        <ScrollViewer Grid.Row="2" Grid.Column="0" Visibility="Collapsed"  Name="ButtonList">
+        <ScrollViewer Grid.Row="2" Grid.Column="0" Visibility="Collapsed"  Name="ButtonList" Grid.ColumnSpan="3">
             <WrapPanel Margin="15,0,15,0" >
 
             </WrapPanel>
         </ScrollViewer>
 
-        <Grid Grid.Row="3" Grid.Column="0">
+        <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3">
             <Grid.RowDefinitions>
                 <RowDefinition Height="20"></RowDefinition>
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition Width="150"></ColumnDefinition>
+                <ColumnDefinition Width="90"></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
             <WrapPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left">
                 <TextBlock Name="Count" Padding="5,2,0,0" FontSize="12"></TextBlock>
             </WrapPanel>
 
-            <Border Grid.Row="0" Grid.Column="1" Width="150" Height="20" MouseEnter="WrapPanel_MouseEnter" MouseLeave="WrapPanel_MouseLeave"  Background="White">
+            <Border Grid.Row="0" Grid.Column="1" Width="90" Height="20" MouseEnter="WrapPanel_MouseEnter" MouseLeave="WrapPanel_MouseLeave"  Background="White">
                 <WrapPanel>
                     <Button Name="Config" Background="White" Visibility="Collapsed" BorderThickness="0" Style="{StaticResource CloseBtn}" HorizontalAlignment="Right" Margin="0,2,5,0" Click="Config_Click">
                         <TextBlock Text="配置"></TextBlock>
-                    </Button>
-
-                    <Button Name="Btn" Background="White" Visibility="Collapsed" BorderThickness="0" Style="{StaticResource CloseBtn}" HorizontalAlignment="Right" Margin="0,2,5,0" Click="Btn_Click">
-                        <TextBlock Text="按钮"></TextBlock>
-                    </Button>
-
-                    <Button  Name="List" Background="White" Visibility="Collapsed" BorderThickness="0" Style="{StaticResource CloseBtn}" HorizontalAlignment="Right" Margin="0,2,5,0" Click="List_Click">
-                        <TextBlock Text="列表"></TextBlock>
                     </Button>
 
                     <Button  Name="Add" Background="White" Visibility="Collapsed" BorderThickness="0" Style="{StaticResource CloseBtn}" HorizontalAlignment="Right" Margin="0,2,5,0" Click="Add_Click">
