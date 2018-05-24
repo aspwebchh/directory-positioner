@@ -192,7 +192,6 @@ namespace DirectoryPositioner {
         private void OpenPath( string path ) {
             try {
                 System.Diagnostics.Process.Start( path );
-                WindowState = WindowState.Minimized;
             } catch( Exception e ) {
                 MessageBox.Show( e.Message );
             }
@@ -204,7 +203,7 @@ namespace DirectoryPositioner {
 
         protected override void OnClosing( System.ComponentModel.CancelEventArgs e ) {
             e.Cancel = true;
-            this.WindowState = WindowState.Minimized;
+            this.HiddenWindow();
         }
 
         private void WrapPanel_MouseEnter( object sender, MouseEventArgs e ) {
