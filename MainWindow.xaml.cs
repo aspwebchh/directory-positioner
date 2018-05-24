@@ -174,7 +174,8 @@ namespace DirectoryPositioner {
             var windowPos = PointsAndSizes.WindowOnLeftBottom;
             this.Left = windowPos.X;
             this.Top = windowPos.Y;
-            this.Show();
+
+            this.Activate();
         }
 
         private void InitLists() {
