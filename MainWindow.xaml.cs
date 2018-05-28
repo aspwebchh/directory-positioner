@@ -109,7 +109,7 @@ namespace DirectoryPositioner {
             DataList.Visibility = Visibility.Visible;
             InitLists();
 
-            ShowWindowOnLeftBottom();
+            ShowWindowOnLeftTop();
 
 
             this.MouseEnter += delegate {
@@ -145,15 +145,15 @@ namespace DirectoryPositioner {
                 timer.Start();
                 timer.Elapsed += delegate {
                     var mousePos = System.Windows.Forms.Control.MousePosition;
-                    if( mousePos.X <= 1 && mousePos.Y >= SystemParameters.PrimaryScreenHeight - PointsAndSizes.ListModeWindowSize.Height ) {
+                    if( mousePos.X <= 1 && mousePos.Y <= PointsAndSizes.ListModeWindowSize.Height ) {
                         this.Dispatcher.Invoke( (Action)delegate {
-                            ShowWindowOnLeftBottom();
+                            ShowWindowOnLeftTop();
                         } );
                     }
 
-                    if( Math.Abs( mousePos.Y - SystemParameters.PrimaryScreenHeight ) <= 1 && mousePos.X <= PointsAndSizes.ListModeWindowSize.Width ) {
+                    if( mousePos.Y <= 1 && mousePos.X <= PointsAndSizes.ListModeWindowSize.Width ) {
                         this.Dispatcher.Invoke( (Action)delegate {
-                            ShowWindowOnLeftBottom();
+                            ShowWindowOnLeftTop();
                         } );
                     }
                 };
@@ -169,8 +169,18 @@ namespace DirectoryPositioner {
             this.Hide();
         }
 
-        private void ShowWindowOnLeftBottom() {
-            var windowPos = PointsAndSizes.WindowOnLeftBottom;
+        //private void ShowWindowOnLeftBottom() {
+        //    var windowPos = PointsAndSizes.WindowOnLeftBottom;
+        //    this.Left = windowPos.X;
+        //    this.Top = windowPos.Y;
+
+        //    this.WindowState = WindowState.Normal;
+        //    this.Show();
+        //    this.Activate();
+        //}
+
+        private void ShowWindowOnLeftTop() {
+            var windowPos = PointsAndSizes.WindowOnLeftTop;
             this.Left = windowPos.X;
             this.Top = windowPos.Y;
 
