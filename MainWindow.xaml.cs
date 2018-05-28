@@ -145,18 +145,23 @@ namespace DirectoryPositioner {
                 timer.Start();
                 timer.Elapsed += delegate {
                     var mousePos = System.Windows.Forms.Control.MousePosition;
-                    if( mousePos.X <= 1 && mousePos.Y <= PointsAndSizes.ListModeWindowSize.Height ) {
+                    if( mousePos.X <= 1 && mousePos.Y <= 1 ) {
                         this.Dispatcher.Invoke( (Action)delegate {
                             ShowWindowOnLeftTop();
                         } );
                     }
+                    //if( mousePos.X <= 1 && mousePos.Y <= PointsAndSizes.ListModeWindowSize.Height ) {
+                    //    this.Dispatcher.Invoke( (Action)delegate {
+                    //        ShowWindowOnLeftTop();
+                    //    } );
+                    //}
 
-                    if( mousePos.Y <= 1 && mousePos.X <= PointsAndSizes.ListModeWindowSize.Width ) {
-                        this.Dispatcher.Invoke( (Action)delegate {
-                            ShowWindowOnLeftTop();
-                        } );
-                    }
-                };
+                        //if( mousePos.Y <= 1 && mousePos.X <= PointsAndSizes.ListModeWindowSize.Width ) {
+                        //    this.Dispatcher.Invoke( (Action)delegate {
+                        //        ShowWindowOnLeftTop();
+                        //    } );
+                        //}
+                    };
 
             } );
         }
