@@ -44,15 +44,21 @@ namespace DirectoryPositioner {
             return string.Join( "", result );
         }
 
+
+        public const string ITEM_TYPE_LINK = "链接";
+        public const string ITEM_TYPE_DIR = "目录";
+        public const string ITEM_TYPE_FILE = "文件";
+        public const string ITEM_TYPE_UNKOWN = "未知";
+
         public static string JudgePathType(string path) {
             if( Regex.IsMatch( path, @"^http(s)?://", RegexOptions.IgnoreCase ) ) {
-                return "链接";
+                return ITEM_TYPE_LINK;
             } else if( Directory.Exists(path) ) {
-                return "目录";
+                return ITEM_TYPE_DIR;
             } else if( File.Exists(path) ) {
-                return "文件";
+                return ITEM_TYPE_FILE;
             } else {
-                return "未知";
+                return ITEM_TYPE_UNKOWN;
             }
         }
     }

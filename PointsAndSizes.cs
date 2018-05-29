@@ -18,12 +18,6 @@ namespace DirectoryPositioner {
             }
         }
 
-        //public static Point WindowOnLeftBottom {
-        //    get {
-        //        return new Point( 0, Convert.ToInt32( System.Windows.SystemParameters.PrimaryScreenHeight - ListModeWindowSize.Height ) );
-        //    }
-        //}
-
         public static Point WindowOnLeftTop {
             get {
                 return new Point( 0, 0 );

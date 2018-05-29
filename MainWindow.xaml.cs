@@ -21,7 +21,8 @@ using Pinyin4net;
 using Pinyin4net.Format;
 using System.Windows.Threading;
 using System.Threading;
-
+using System.Windows.Automation.Peers;
+using System.Windows.Automation.Provider;
 
 namespace DirectoryPositioner {
     /// <summary>
@@ -44,15 +45,12 @@ namespace DirectoryPositioner {
 
             this.Activated += delegate {
                 Keyboard.Focus( SearchText );
+                Keyboard.Focus( this );
             };
 
             var jumpListView = false;
 
             this.KeyUp += delegate ( object sender, KeyEventArgs e ) {
-                var pageMode = DataSource.GetPageMode();
-                if( pageMode == PageMode.Btn ) {
-                    return;
-                }
                 if( e.Key == Key.Down ) {
                     if( SearchText.IsFocused ) {
                         DataList.SelectedIndex = 0;
@@ -102,7 +100,6 @@ namespace DirectoryPositioner {
 
             DataList.Visibility = Visibility.Collapsed;
             ButtonList.Visibility = Visibility.Collapsed;
-            var pageMode = DataSource.GetPageMode();
 
             this.Width = PointsAndSizes.ListModeWindowSize.Width;
             this.Height = PointsAndSizes.ListModeWindowSize.Width;
@@ -145,23 +142,12 @@ namespace DirectoryPositioner {
                 timer.Start();
                 timer.Elapsed += delegate {
                     var mousePos = System.Windows.Forms.Control.MousePosition;
-                    if( mousePos.X <= 1 && mousePos.Y <= 1 ) {
+                    if( mousePos.X <= 10 && mousePos.Y <= 10 ) {
                         this.Dispatcher.Invoke( (Action)delegate {
                             ShowWindowOnLeftTop();
                         } );
                     }
-                    //if( mousePos.X <= 1 && mousePos.Y <= PointsAndSizes.ListModeWindowSize.Height ) {
-                    //    this.Dispatcher.Invoke( (Action)delegate {
-                    //        ShowWindowOnLeftTop();
-                    //    } );
-                    //}
-
-                        //if( mousePos.Y <= 1 && mousePos.X <= PointsAndSizes.ListModeWindowSize.Width ) {
-                        //    this.Dispatcher.Invoke( (Action)delegate {
-                        //        ShowWindowOnLeftTop();
-                        //    } );
-                        //}
-                    };
+                };
 
             } );
         }
@@ -174,16 +160,6 @@ namespace DirectoryPositioner {
             this.Hide();
         }
 
-        //private void ShowWindowOnLeftBottom() {
-        //    var windowPos = PointsAndSizes.WindowOnLeftBottom;
-        //    this.Left = windowPos.X;
-        //    this.Top = windowPos.Y;
-
-        //    this.WindowState = WindowState.Normal;
-        //    this.Show();
-        //    this.Activate();
-        //}
-
         private void ShowWindowOnLeftTop() {
             var windowPos = PointsAndSizes.WindowOnLeftTop;
             this.Left = windowPos.X;
@@ -192,6 +168,10 @@ namespace DirectoryPositioner {
             this.WindowState = WindowState.Normal;
             this.Show();
             this.Activate();
+
+            ButtonAutomationPeer bap = new ButtonAutomationPeer( ClickBtn );
+            IInvokeProvider iip = bap.GetPattern( PatternInterface.Invoke ) as IInvokeProvider;
+            iip.Invoke();
         }
 
         private void InitLists() {
@@ -209,6 +189,7 @@ namespace DirectoryPositioner {
         private void OpenPath( string path ) {
             try {
                 System.Diagnostics.Process.Start( path );
+                DataSource.AddOpenCount( path );
             } catch( Exception e ) {
                 MessageBox.Show( e.Message );
             }
@@ -240,7 +221,7 @@ namespace DirectoryPositioner {
         }
 
         private void Add_Click( object sender, RoutedEventArgs e ) {
-            var ediWid = new Edit(this);
+            var ediWid = new Edit( this );
             ediWid.Owner = this;
             ediWid.EditCompleted += delegate {
                 InitPage();
@@ -271,15 +252,6 @@ namespace DirectoryPositioner {
         }
         #endregion
 
-        private void Btn_Click( object sender, RoutedEventArgs e ) {
-            DataSource.SetPageMode( PageMode.Btn );
-            InitPage();
-        }
-
-        private void List_Click( object sender, RoutedEventArgs e ) {
-            DataSource.SetPageMode( PageMode.List );
-            InitPage();
-        }
 
         private void DataList_MouseDoubleClick( object sender, MouseButtonEventArgs e ) {
             var selectItem = DataList.SelectedItem as ConfigItem;
@@ -289,7 +261,6 @@ namespace DirectoryPositioner {
         private void SearchText_KeyUp( object sender, KeyEventArgs e ) {
             var text = SearchText.Text.Trim();
             var dataList = DataSource.GetDataList( text );
-            var pageMode = DataSource.GetPageMode();
             DataList.ItemsSource = dataList;
             SetDataCount( dataList.Count );
         }
@@ -315,6 +286,10 @@ namespace DirectoryPositioner {
             } catch( Exception ex ) {
                 MessageBox.Show( ex.Message );
             }
+        }
+
+        private void ClickBtn_Click( object sender, RoutedEventArgs e ) {
+        
         }
     }
 }

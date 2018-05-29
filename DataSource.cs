@@ -87,6 +87,10 @@ namespace DirectoryPositioner {
                 return string.Empty;
             };
 
+            Func<string, int> getInteger = strVal => {
+                return string.IsNullOrEmpty( strVal ) ? 0 : Convert.ToInt32( strVal );
+            };
+
             var xDoc = XDocument.Load( SRC_FILE_NAME );
             var result = from ele in xDoc.Descendants( "Path" )
                          orderby getValue( ele.Attribute( "Name" ) ) ascending
@@ -95,19 +99,32 @@ namespace DirectoryPositioner {
                              BgColor = getValue( ele.Attribute( "BgColor" ) ),
                              TextColor = getValue( ele.Attribute( "TextColor" ) ),
                              Path = getValue( ele.FirstNode as XText ),
-                             Type = Helper.JudgePathType( getValue( ele.FirstNode as XText ) )
+                             Type = Helper.JudgePathType( getValue( ele.FirstNode as XText ) ),
+                             OpenCount = getInteger( getValue( ele.Attribute( "OpenCount" ) ) )
                          };
             return result.ToList();
         }
 
         public static List<ConfigItem> GetDataList( string pattern ) {
+            Func<ConfigItem, bool> checkPathName = item => {
+                if( item.Type == Helper.ITEM_TYPE_DIR || item.Type == Helper.ITEM_TYPE_FILE ) {
+                    var pathName = Path.GetFileNameWithoutExtension( item.Path );
+                    return pathName.ToLower().IndexOf( pattern.ToLower() ) != -1;
+                } else {
+                    return false;
+                }
+            };
+
             return GetDataList().Where( item => {
                 var initials = Helper.GetInitials( item.Name );
                 var pinYin = Helper.GetPinYin( item.Name );
                 return initials.ToLower().IndexOf( pattern.ToLower() ) != -1 ||
                  pinYin.ToLower().IndexOf( pattern.ToLower() ) != -1 ||
-                 item.Name.IndexOf( pattern ) != -1;
-            } ).ToList();
+                 item.Name.IndexOf( pattern ) != -1 ||
+                 checkPathName( item );
+            } )
+            .OrderByDescending( item => item.OpenCount )
+            .ToList();
         }
 
         public static bool Delete( string path ) {
@@ -145,6 +162,7 @@ namespace DirectoryPositioner {
             return true;
         }
 
+        #region
         private const string PAGE_MODE_BTN = "Btn";
         private const string PAGE_MODE_LIST = "List";
 
@@ -171,6 +189,22 @@ namespace DirectoryPositioner {
             var xmlDoc = new XmlDocument();
             xmlDoc.Load( SRC_FILE_NAME );
             xmlDoc.DocumentElement.SetAttribute( "Mode", pageModeString );
+            xmlDoc.Save( SRC_FILE_NAME );
+        }
+        #endregion
+
+
+        public static void AddOpenCount( string path ) {
+            var xmlDoc = new XmlDocument();
+            xmlDoc.Load( SRC_FILE_NAME );
+            var ele = GetElementByPath( xmlDoc, path );
+            if( ele == null ) {
+                return;
+            }
+            var sOpenCount = ele.GetAttribute( "OpenCount" );
+            var iOpenCount = string.IsNullOrEmpty( sOpenCount ) ? 0 : Convert.ToInt32( sOpenCount );
+            iOpenCount++;
+            ele.SetAttribute( "OpenCount", iOpenCount.ToString() );
             xmlDoc.Save( SRC_FILE_NAME );
         }
     }

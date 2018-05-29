@@ -7,24 +7,28 @@ using System.IO;
 
 namespace DirectoryPositioner {
     class ConfigItem {
-        public String Name {
+        public string Name {
             get;set;
         }
 
-        public String BgColor {
+        public string BgColor {
             get; set;
         }
 
-        public String TextColor {
+        public string TextColor {
             get; set;
         }
 
-        public String Path {
+        public string Path {
             get; set;
         }
 
 
         public string Type {
+            get;set;
+        }
+
+        public int OpenCount {
             get;set;
         }
     }

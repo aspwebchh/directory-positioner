@@ -199,6 +199,8 @@
                     <Button  Name="Close" Background="White" Visibility="Collapsed" BorderThickness="0" Style="{StaticResource CloseBtn}" HorizontalAlignment="Right" Margin="0,2,5,0" Click="Close_Click">
                         <TextBlock Text="退出"></TextBlock>
                     </Button>
+
+                    <Button Name="ClickBtn" Visibility="Collapsed" Click="ClickBtn_Click"></Button>
                 </WrapPanel>
             </Border>
 
